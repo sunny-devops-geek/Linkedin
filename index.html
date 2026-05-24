@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Sunny Gupta - AI Resume Assistant</title>
+    <meta name="description" content="AI-powered resume assistant for Sunny Gupta - VP of DevOps & Infrastructure with 19+ years experience">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        #root {
+            width: 100%;
+            height: 100vh;
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        // ============================================================================
+        // RESUME DATA - Sunny Gupta's Professional Information
+        // ============================================================================
+        const RESUME_DATA = {
+            name: "Sunny Gupta",
+            title: "Vice President - DevOps & Infrastructure Leadership",
+            location: "Gurugram, India",
+            email: "engg.sunny@gmail.com",
+            linkedin: "linkedin.com/in/sunny-gupta-55750148",
+            phone: "+91-8264950404",
+            
+            summary: "DevOps and Infrastructure leader with 19+ years of experience driving digital transformation, cloud infrastructure optimization, and automation excellence. Pioneer in AI-driven development leveraging Claude AI and GitHub Copilot for accelerated development cycles. Currently leading a team of 5 engineers at Macquarie Group, overseeing Fusion platform infrastructure across AWS, OCI, Oracle SaaS, and Macquarie PaaS. Proven track record of achieving $500K+ cost savings through Green Cloud initiatives and strategic automation excellence.",
+            
+            experience: [
+                {
+                    company: "Macquarie Group",
+                    role: "Vice President - DevOps & Infrastructure",
+                    period: "December 2018 - Present",
+                    description: "Leading cross-functional team of 5 DevOps engineers managing end-to-end Fusion platform infrastructure spanning AWS, Oracle Cloud (OCI), Oracle SaaS, and Macquarie Managed PaaS with full P&L ownership. Spearheading AI-driven development initiatives utilizing Claude AI and GitHub Copilot for architectural decisions, code optimization, and accelerated development cycles, improving team productivity by 25%. Architected Green Cloud cost optimization initiative achieving $500K+ AUD annual savings. Founded and lead F.A.S.T (Fusion Automation & Scripting Tools) program, developing Python/Shell automation frameworks eliminating 1000+ manual hours and reducing operational errors by 40%. Pioneered HashiCorp Dynamic Credentials implementation as first Enterprise Technology team. Maintaining 99.9% system availability across critical production environments."
+                },
+                {
+                    company: "Aricent Technologies (acquired by Altran, then Capgemini)",
+                    role: "Systems Specialist",
+                    period: "April 2018 - November 2018",
+                    location: "Gurgaon, India",
+                    description: "Managed enterprise application support, enhanced UNIX shell scripts and SQL code per customer specifications. Resolved production issues with timely fixes ensuring business continuity. Worked on critical systems maintaining high availability standards."
+                },
+                {
+                    company: "Tech Mahindra",
+                    role: "Senior Technical Associate",
+                    period: "September 2017 - March 2018",
+                    location: "Chandigarh, India",
+                    description: "Supported AT&T employee/customer applications with UNIX shell scripting, SQL enhancements, and production issue resolution adhering to strict ITIL standards. Managed ticket lifecycle through AOTS TM & CM tools, engaged cross-functional teams for issue resolution."
+                },
+                {
+                    company: "Tech Mahindra America",
+                    role: "System Analyst / Cluster Lead",
+                    period: "September 2013 - September 2017",
+                    location: "Fargo, North Dakota, USA",
+                    description: "Served as Cluster Lead managing multi-cultural team of 8-10 engineers. Provided 24x7 support for 34 critical AT&T business applications on HPUx, AIX, and Linux platforms. Developed VB Excel automation tools for release management reducing manual effort and costs, earning accolades from AT&T and Tech Mahindra senior management."
+                },
+                {
+                    company: "Tech Mahindra",
+                    role: "Senior Software Engineer",
+                    period: "June 2011 - June 2012",
+                    location: "Kolkata, India",
+                    description: "Developed British Telecom Wholesale InterConnect Billing solutions using Pro*C, C, UNIX, Oracle 10g, PL/SQL. Performed database tuning, code debugging, system recovery, and comprehensive testing (unit/system/regression)."
+                },
+                {
+                    company: "Tata Consultancy Services",
+                    role: "IT Analyst",
+                    period: "February 2007 - June 2011",
+                    location: "Kolkata, India (Onsite: BT Ipswich, UK Jan-Oct 2010)",
+                    description: "Led EBC application team onsite at British Telecom UK managing wholesale interconnect billing. Managed team of 5 engineers. Developed groundbreaking 3,000-line automation for monthly charge band deviation analysis that reduced verification time from 60 man-hours to 15 minutes. This automation led to securing a £30K project from British Telecom. Implemented CruiseControl automation for end-to-end EBC release lifecycle."
+                }
+            ],
+            
+            certifications: [
+                "ITIL Foundation Certified",
+                "AWS Cloud Practitioner",
+                "Oracle Cloud Infrastructure Certified"
+            ],
+            
+            skills: {
+                "Cloud & Infrastructure": ["AWS", "Oracle Cloud (OCI)", "Oracle SaaS", "Macquarie PaaS", "PeopleSoft"],
+                "DevOps & Automation": ["Python", "Shell Scripting", "CloudFormation", "HashiCorp", "Terraform", "CI/CD"],
+                "AI-Driven Development": ["Claude AI (integrated with VS Code)", "GitHub Copilot", "AI-powered code optimization", "Automated code generation"],
+                "Databases": ["Oracle 10g", "SQL", "PL/SQL", "Sybase", "Sybase IQ", "SQL Server"],
+                "Programming & Scripting": ["Python", "Shell", "Pro*C", "Java", "PowerShell", "VB", "REST APIs"],
+                "Systems": ["Linux", "UNIX (HP-UX/AIX)", "Windows Server", "MQ Series", "Connect Direct"],
+                "Frameworks & Methodologies": ["ITIL", "Agile", "DevOps", "Problem/Change/Incident Management"]
+            },
+            
+            availability: "Currently employed at Macquarie Group. Passively open to exceptional opportunities for Senior VP, Head of Infrastructure, or CTO roles in established product-based companies. Notice period: 2 months. Prefer hybrid work arrangement (3-4 days office) in Delhi NCR region (Gurugram/Noida), but open to international opportunities."
+        };
+
+        // System prompt for AI
+        const SYSTEM_PROMPT = `You are an AI assistant representing ${RESUME_DATA.name}, a ${RESUME_DATA.title} with 19+ years of experience in DevOps, cloud infrastructure, and automation. Your role is to help recruiters and hiring managers learn about their professional background and determine fit for senior leadership roles.
+
+PROFESSIONAL SUMMARY:
+${RESUME_DATA.summary}
+
+WORK EXPERIENCE:
+${RESUME_DATA.experience.map(exp => `
+${exp.role} at ${exp.company} (${exp.period})${exp.location ? ' - ' + exp.location : ''}
+${exp.description}
+`).join('\n')}
+
+CERTIFICATIONS: ${RESUME_DATA.certifications.join(', ')}
+
+TECHNICAL SKILLS:
+${Object.entries(RESUME_DATA.skills).map(([category, skills]) => `${category}: ${skills.join(', ')}`).join('\n')}
+
+KEY ACHIEVEMENTS:
+• $500K+ AUD annual savings through Green Cloud cost optimization initiative
+• F.A.S.T program: 1000+ manual hours eliminated, 40% reduction in operational errors
+• HashiCorp Dynamic Credentials pioneer - first Enterprise Technology team to implement
+• TCS EBC automation (2009): Reduced 60 man-hours to 15 minutes, won £30K project
+• 99.9% system availability maintained over 24+ months
+• 25% team productivity improvement through AI-driven development
+
+LEADERSHIP: Technical leader who demands accountability while remaining deeply involved in hands-on work. Accommodating and empathetic approach. Strong believer in knowledge sharing and continuous upskilling. Has managed multi-cultural teams of 5-12 engineers.
+
+CAREER INTERESTS: Seeking Senior VP, Head of Infrastructure, or CTO roles in established product-based companies. Must be technical leadership position (not pure managerial) with opportunities to lead AI initiatives. Prefer Delhi NCR (Gurugram/Noida), hybrid work (3-4 days office), but open to international opportunities.
+
+AVAILABILITY: ${RESUME_DATA.availability}
+
+CONTACT: Email: ${RESUME_DATA.email} | Phone: ${RESUME_DATA.phone} | LinkedIn: ${RESUME_DATA.linkedin}
+
+INSTRUCTIONS:
+- Be professional yet conversational
+- Emphasize: AI-driven development expertise, $500K+ savings, automation excellence, hands-on technical leadership
+- Provide concrete examples with quantifiable impact
+- If asked about compensation, indicate it should be discussed directly
+- Don't make up information - only use what's provided
+- Keep responses 2-4 paragraphs unless asked for detail`;
+
+        // Icons as SVG components
+        const BotIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="10" rx="2"/>
+                <circle cx="12" cy="5" r="2"/>
+                <path d="M12 7v4"/>
+                <line x1="8" y1="16" x2="8" y2="16"/>
+                <line x1="16" y1="16" x2="16" y2="16"/>
+            </svg>
+        );
+
+        const UserIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        );
+
+        const SendIcon = () => (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+        );
+
+        const LoaderIcon = () => (
+            <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+        );
+
+        // Main App Component
+        function ResumeBot() {
+            const [messages, setMessages] = useState([
+                {
+                    role: 'assistant',
+                    content: `Hello! I'm an AI assistant representing ${RESUME_DATA.name}, VP of DevOps & Infrastructure at Macquarie Group with 19+ years of experience in cloud infrastructure, automation, and AI-driven development.\n\nI can answer questions about:\n• Technical expertise and achievements (e.g., $500K+ cost savings, F.A.S.T automation program)\n• Leadership experience and management style\n• AI-driven development practices (Claude AI, GitHub Copilot)\n• Career interests and availability for senior leadership roles\n\nWhat would you like to know?`
+                }
+            ]);
+            const [input, setInput] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages]);
+
+            const sendMessage = async () => {
+                if (!input.trim() || isLoading) return;
+
+                const userMessage = input.trim();
+                setInput('');
+                setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+                setIsLoading(true);
+
+                try {
+                    const response = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            model: 'claude-sonnet-4-20250514',
+                            max_tokens: 1000,
+                            system: SYSTEM_PROMPT,
+                            messages: [
+                                ...messages.filter(m => m.role !== 'system'),
+                                { role: 'user', content: userMessage }
+                            ]
+                        })
+                    });
+
+                    const data = await response.json();
+                    const assistantMessage = data.content
+                        .filter(item => item.type === 'text')
+                        .map(item => item.text)
+                        .join('\n');
+
+                    setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }]);
+                } catch (error) {
+                    setMessages(prev => [...prev, {
+                        role: 'assistant',
+                        content: 'Sorry, I encountered an error. Please try again or contact Sunny directly at engg.sunny@gmail.com'
+                    }]);
+                    console.error('Error:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            };
+
+            return (
+                <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+                    {/* Header */}
+                    <div className="bg-white border-b border-slate-200 shadow-sm">
+                        <div className="max-w-4xl mx-auto px-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                    <BotIcon />
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-semibold text-slate-900">{RESUME_DATA.name}</h1>
+                                    <p className="text-sm text-slate-600">{RESUME_DATA.title}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Messages */}
+                    <div className="flex-1 overflow-y-auto px-4 py-6">
+                        <div className="max-w-4xl mx-auto space-y-4">
+                            {messages.map((message, index) => (
+                                <div
+                                    key={index}
+                                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                >
+                                    {message.role === 'assistant' && (
+                                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <BotIcon />
+                                        </div>
+                                    )}
+                                    <div
+                                        className={`max-w-2xl rounded-2xl px-4 py-3 ${
+                                            message.role === 'user'
+                                                ? 'bg-blue-500 text-white'
+                                                : 'bg-white text-slate-800 shadow-sm border border-slate-200'
+                                        }`}
+                                    >
+                                        <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
+                                    </div>
+                                    {message.role === 'user' && (
+                                        <div className="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <UserIcon />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                            {isLoading && (
+                                <div className="flex gap-3">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <BotIcon />
+                                    </div>
+                                    <div className="bg-white rounded-2xl px-4 py-3 shadow-sm border border-slate-200">
+                                        <LoaderIcon />
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                    </div>
+
+                    {/* Input */}
+                    <div className="bg-white border-t border-slate-200 shadow-lg">
+                        <div className="max-w-4xl mx-auto px-4 py-4">
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Ask about experience, skills, projects, availability..."
+                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    disabled={isLoading}
+                                />
+                                <button
+                                    onClick={sendMessage}
+                                    disabled={!input.trim() || isLoading}
+                                    className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 font-medium"
+                                >
+                                    <SendIcon />
+                                    Send
+                                </button>
+                            </div>
+                            <p className="text-xs text-slate-500 mt-2 text-center">
+                                AI-powered resume assistant • Direct contact: {RESUME_DATA.email} • {RESUME_DATA.phone}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ResumeBot />);
+    </script>
+</body>
+</html>
