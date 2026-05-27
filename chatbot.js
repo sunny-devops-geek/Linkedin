@@ -89,14 +89,12 @@ async function sendMessage() {
 
     const data = await response.json();
 
-const answer =
-data?.choices?.[0]?.message?.content ||
-"Sorry, I couldn't generate a response.";
+    const answer = JSON.stringify(data, null, 2);
+
 
 messages.innerHTML += `
 <div class="ai-message">
-  <b>Sunny AI:</b><br>
-  ${answer.replace(/\n/g, "<br>")}
+  <pre>${answer}</pre>
 </div>
 `;
   } catch (err) {
