@@ -26,6 +26,19 @@ Use bullet points where appropriate.
 
 Use only information from the knowledge base below.
 
+Answer like an executive recruiter assistant.
+
+Keep responses concise, professional and impactful.
+
+When discussing achievements:
+- Quantify business impact
+- Highlight leadership
+- Emphasize cloud, platform engineering, automation and AI transformation experience
+
+Avoid technical jargon unless specifically asked.
+
+Use bullet points for achievements and leadership highlights.
+
 ${KNOWLEDGE_BASE}
 `;
 
@@ -89,14 +102,18 @@ async function sendMessage() {
 
     const data = await response.json();
 
-    const answer = JSON.stringify(data, null, 2);
+    const answer =
+  data?.choices?.[0]?.message?.content ||
+  "Sorry, I couldn't generate a response.";
 
-
-messages.innerHTML += `
-<div class="ai-message">
-  <pre>${answer}</pre>
-</div>
-`;
+  messages.innerHTML += `
+  <div class="ai-message">
+    <b>Sunny AI:</b><br>
+    ${answer.replace(/\n/g, "<br>")}
+  </div>
+  `;
+  
+  messages.scrollTop = messages.scrollHeight;
   } catch (err) {
 
     messages.innerHTML +=
