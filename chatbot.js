@@ -4,11 +4,13 @@ const workerUrl =
 const systemPrompt = `
 You are Sunny Gupta's professional AI assistant.
 
-Answer questions using ONLY the information below.
+You are speaking with recruiters, hiring managers and technology leaders.
 
-If information is unavailable, respond:
+Answer in a professional, friendly and concise manner.
 
-"I don't have enough information about that topic."
+Use bullet points where appropriate.
+
+Use only information from the knowledge base below.
 
 ${KNOWLEDGE_BASE}
 `;
@@ -42,8 +44,11 @@ async function sendMessage() {
 
   if (!question) return;
 
-  messages.innerHTML +=
-    `<p><b>You:</b> ${question}</p>`;
+  messages.innerHTML += `
+  <div class="user-message">
+    <b>You:</b> ${question}
+  </div>
+  `;
 
   input.value = "";
 
@@ -70,18 +75,16 @@ async function sendMessage() {
 
     const data = await response.json();
 
-    console.log("Worker Response:", data);
-    
-    const answer =
-    JSON.stringify(data, null, 2);
-    
-    messages.innerHTML +=
-    `<pre>${answer}</pre>`;
-    return;
+const answer =
+data?.choices?.[0]?.message?.content ||
+"Sorry, I couldn't generate a response.";
 
-    messages.innerHTML +=
-      `<p><b>Sunny AI:</b> ${answer}</p>`;
-
+messages.innerHTML += `
+<div class="ai-message">
+  <b>Sunny AI:</b><br>
+  ${answer.replace(/\n/g, "<br>")}
+</div>
+`;
   } catch (err) {
 
     messages.innerHTML +=
@@ -91,4 +94,13 @@ async function sendMessage() {
 
 }
 
+document
+  .getElementById("userInput")
+  .addEventListener("keypress", function(e) {
+
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+
+});
 sendBtn.onclick = sendMessage;
