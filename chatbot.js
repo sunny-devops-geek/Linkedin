@@ -70,9 +70,14 @@ async function sendMessage() {
 
     const data = await response.json();
 
+    console.log("Worker Response:", data);
+    
     const answer =
-      data?.choices?.[0]?.message?.content ||
-      "No response received.";
+    JSON.stringify(data, null, 2);
+    
+    messages.innerHTML +=
+    `<pre>${answer}</pre>`;
+    return;
 
     messages.innerHTML +=
       `<p><b>Sunny AI:</b> ${answer}</p>`;
